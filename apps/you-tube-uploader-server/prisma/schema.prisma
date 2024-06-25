@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Tag {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model Channel {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+  videos    Video[]
+}
+
+model Category {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+  videos    Video[]
+}
+
+model Video {
+  category      Category?               @relation(fields: [categoryId], references: [id])
+  categoryId    String?
+  channel       Channel?                @relation(fields: [channelId], references: [id])
+  channelId     String?
+  createdAt     DateTime                @default(now())
+  description   String?
+  id            String                  @id @default(uuid())
+  privacyStatus EnumVideoPrivacyStatus?
+  tags          EnumVideoTags[]
+  title         String?
+  updatedAt     DateTime                @updatedAt
+  videoFile     Json?
+}
+
+enum EnumVideoPrivacyStatus {
+  Option1
+}
+
+enum EnumVideoTags {
+  Option1
+}
